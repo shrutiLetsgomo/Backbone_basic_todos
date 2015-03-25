@@ -1,0 +1,86 @@
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+		<title>Todo</title>
+		<link rel="stylesheet" href="assets/css/bootstrap.css">
+	</head>
+
+	<body>
+		<div class="navbar navbar-inner navbar-fixed-top">
+			<div class="navbar-inner">
+				<div class="container">
+					<span class="brand"> Todo App</span>
+				</div>
+			</div>
+		</div>
+
+		<div id="main-region" class="container" style="margin-top:100px">
+			<p>Here is static content in the web page. You'll notice that it gets 21 replaced by our app as soon as we start it</p>
+		</div>
+
+		 <script src="assets/js/vendor/jquery.js"></script> 
+		 <script src="assets/js/vendor/json2.js"></script> 
+		 <script src="assets/js/vendor/underscore.js"></script> 
+		 <script src="assets/js/vendor/backbone.js"></script> 
+		 <script src="assets/js/vendor/backbone.marionette.js"></script> 
+	</body>
+</html>
+
+
+<script type="text/template" id="todo-list-item">
+		<h5><%- title%></h5>
+		<p> - <%- content%></p>
+</script>
+
+<script = "text/javascipt">
+	var TodoApp = new Marionette.Application();
+
+	TodoApp.addRegions({
+		mainRegion: "#main-region"
+	});
+
+	TodoApp.todo =  Backbone.Model.extend({});
+
+	TodoApp.todoCollection = Backbone.Collection.extend({
+		model: TodoApp.todo,
+		comparator: "title"
+	})
+
+	TodoApp.TodoItemView = Marionette.ItemView.extend({
+		tagName: "li",
+		template: "#todo-list-item"
+	})
+
+	TodoApp.TodosView = Marionette.CollectionView.extend({
+		tagName: "ul",
+		childView: TodoApp.TodoItemView
+	});
+
+
+	TodoApp.on('start', function(){
+		var todos = new TodoApp.todoCollection([
+													{
+														title:"Check git",
+														content:"check git for Vcs"
+													},
+													{
+														title:"Check svn",
+														content:"check svn for Vcs"
+													},
+													{
+														title:"Check dumy",
+														content:"check dumy for Vcs"
+													}
+												]);
+
+
+		var todoListView = new TodoApp.TodosView({
+			collection : todos
+		});
+
+		TodoApp.mainRegion.show(todoListView);
+	});
+
+	TodoApp.start();
+</script>
+
